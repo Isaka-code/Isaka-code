@@ -3,7 +3,7 @@ name: Kaggle Badges
 on:
   schedule:
     # You can change the cron expression to suit your needs
-    - cron: "30 19 5 * *" # 19:30 on the 5th of every month
+    - cron: "31 10 5 * *" # JSTの19:31に対応するUTCの10:30 # 19:30 on the 5th of every month
   workflow_dispatch:
 
 jobs:
