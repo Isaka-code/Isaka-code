@@ -1,9 +1,8 @@
 # :chart_with_upwards_trend: GitHub Stats
 
 
-
-[![trophy](https://github-profile-trophy.vercel.app/?username=Isaka-code&theme=onedark&column=7
-)](https://github.com/ryo-ma/github-profile-trophy)
+![github stats](https://github-readme-stats-seven-blue-77.vercel.app/api/?username=Isaka-code)
+![top langs](https://github-readme-stats-seven-blue-77.vercel.app/api/top-langs/?username=Isaka-code)
 
 
 
