@@ -2,7 +2,6 @@
 
 
 ![github stats](https://github-readme-stats-seven-blue-77.vercel.app/api/?username=Isaka-code)
-![top langs](https://github-readme-stats-seven-blue-77.vercel.app/api/top-langs/?username=Isaka-code)
 
 
 
