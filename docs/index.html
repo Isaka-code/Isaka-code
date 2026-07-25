@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ねぼすけAIを おこそう！</title>
+<style>
+  :root{
+    --ink:#2b2450;
+    --cream:#fff6e5;
+    --gold:#ffd45e;
+    --pink:#ff9aa2;
+    --mint:#9be7c4;
+    --bar-bg:rgba(255,255,255,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN",system-ui,-apple-system,"Yu Gothic",sans-serif;
+    background:radial-gradient(120% 90% at 50% 0%,#3b2a6b 0%,#241a48 55%,#161033 100%);
+    color:var(--cream);
+    min-height:100dvh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:clamp(10px,2.2vh,22px);
+    padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
+    overflow:hidden;
+    -webkit-user-select:none;user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+
+  /* ---- 星空 ---- */
+  #stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:tw 3s infinite ease-in-out}
+  @keyframes tw{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:.9;transform:scale(1.2)}}
+
+  #fx{position:fixed;inset:0;pointer-events:none;z-index:5}
+
+  h1{
+    position:relative;z-index:2;
+    font-size:clamp(20px,5.2vw,32px);letter-spacing:.04em;
+    text-shadow:0 3px 0 rgba(0,0,0,.25);
+  }
+  h1 .em{color:var(--gold)}
+
+  /* ---- キャラ ---- */
+  #stage{position:relative;z-index:2;cursor:pointer}
+  #robot{width:clamp(190px,52vw,270px);height:auto;display:block;overflow:visible;
+         filter:drop-shadow(0 14px 26px rgba(0,0,0,.45))}
+  #stage.bounce #robot{animation:squash .18s ease-out}
+  @keyframes squash{
+    0%{transform:scale(1,1)}
+    40%{transform:scale(1.09,.9) translateY(6px)}
+    100%{transform:scale(1,1)}
+  }
+  #body{animation:breathe 3.4s ease-in-out infinite;transform-origin:50% 90%}
+  @keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.025,.975)}}
+  .awake #body{animation:hop .5s ease-in-out 3}
+  @keyframes hop{0%,100%{transform:translateY(0)}35%{transform:translateY(-18px)}}
+  #bulb{animation:dim 3.4s ease-in-out infinite}
+  @keyframes dim{0%,100%{opacity:.35}50%{opacity:.9}}
+  .awake #bulb{animation:blink .3s steps(2) infinite;opacity:1!important}
+  @keyframes blink{0%{opacity:1}100%{opacity:.4}}
+  .eye-open{display:none}
+  .awake .eye-open{display:block}
+  .awake .eye-shut{display:none}
+  #blush{opacity:0;transition:opacity .3s}
+  .awake #blush{opacity:1}
+
+  /* ---- zzz ---- */
+  .zzz{position:absolute;font-size:clamp(20px,5vw,30px);font-weight:700;color:#cbbdf5;
+       pointer-events:none;animation:float 3s linear infinite;opacity:0}
+  @keyframes float{0%{opacity:0;transform:translate(0,0) scale(.6)}
+    25%{opacity:.95}
+    100%{opacity:0;transform:translate(38px,-90px) scale(1.25)}}
+  .awake .zzz{display:none}
+
+  /* ---- ふきだし ---- */
+  #bubble{
+    position:absolute;left:50%;bottom:100%;transform:translate(-50%,10px) scale(.7);
+    background:var(--cream);color:var(--ink);
+    padding:14px 18px;border-radius:20px;
+    font-size:clamp(15px,3.9vw,20px);font-weight:700;line-height:1.5;
+    width:max-content;max-width:min(88vw,340px);text-align:center;
+    box-shadow:0 8px 22px rgba(0,0,0,.35);
+    opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);
+    margin-bottom:14px;
+  }
+  #bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
+    border:12px solid transparent;border-top-color:var(--cream)}
+  #bubble.show{opacity:1;transform:translate(-50%,0) scale(1)}
+
+  /* ---- メーター ---- */
+  #meter{position:relative;z-index:2;width:min(88vw,420px)}
+  #meterTop{display:flex;justify-content:space-between;align-items:baseline;
+            font-size:clamp(13px,3.4vw,16px);margin-bottom:6px;opacity:.95}
+  #pct{font-weight:700;font-size:clamp(17px,4.6vw,22px);color:var(--gold)}
+  #track{height:22px;background:var(--bar-bg);border-radius:99px;overflow:hidden;
+         box-shadow:inset 0 2px 6px rgba(0,0,0,.35)}
+  #fill{height:100%;width:0%;border-radius:99px;
+        background:linear-gradient(90deg,#7ad7f0,#9be7c4 45%,var(--gold));
+        transition:width .09s linear;
+        box-shadow:0 0 14px rgba(255,212,94,.55)}
+
+  /* ---- ボタン ---- */
+  #tapBtn{
+    position:relative;z-index:2;
+    font-family:inherit;font-size:clamp(19px,5vw,26px);font-weight:800;
+    color:#5a3d00;background:linear-gradient(180deg,#ffe38a,var(--gold));
+    border:none;border-radius:99px;padding:16px 44px;cursor:pointer;
+    box-shadow:0 7px 0 #d9a92e,0 12px 22px rgba(0,0,0,.4);
+    transition:transform .07s,box-shadow .07s;
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  #tapBtn:active{transform:translateY(5px);box-shadow:0 2px 0 #d9a92e,0 6px 14px rgba(0,0,0,.4)}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+  #tapBtn:active,.awake #tapBtn{animation:none}
+
+  #score{position:relative;z-index:2;font-size:clamp(13px,3.4vw,16px);opacity:.85}
+  #score b{color:var(--gold);font-size:1.28em}
+
+  #hint{position:relative;z-index:2;font-size:clamp(12px,3.2vw,14px);opacity:.5}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+<canvas id="fx"></canvas>
+
+<h1>ねぼすけAIを <span class="em">おこそう！</span></h1>
+
+<div id="stage">
+  <div id="bubble"></div>
+  <span class="zzz" style="left:76%;top:6%;animation-delay:0s">z</span>
+  <span class="zzz" style="left:84%;top:0%;animation-delay:1s">z</span>
+  <span class="zzz" style="left:70%;top:12%;animation-delay:2s">z</span>
+
+  <svg id="robot" viewBox="0 0 240 210" aria-label="ねむっている ねぼすけAI">
+    <g id="body">
+      <!-- アンテナ -->
+      <line x1="120" y1="30" x2="120" y2="52" stroke="#8f7fd8" stroke-width="6" stroke-linecap="round"/>
+      <circle id="bulb" cx="120" cy="24" r="11" fill="var(--gold)"/>
+      <!-- からだ -->
+      <rect x="34" y="48" width="172" height="132" rx="42" fill="#fff6e5"/>
+      <!-- ほっぺ -->
+      <g id="blush">
+        <ellipse cx="63" cy="128" rx="15" ry="10" fill="var(--pink)" opacity=".75"/>
+        <ellipse cx="177" cy="128" rx="15" ry="10" fill="var(--pink)" opacity=".75"/>
+      </g>
+      <!-- かお（がめん） -->
+      <rect x="60" y="70" width="120" height="76" rx="26" fill="#33285e"/>
+      <!-- とじた目 -->
+      <g class="eye-shut" stroke="var(--mint)" stroke-width="7" stroke-linecap="round" fill="none">
+        <path d="M84 108 q14 14 28 0"/>
+        <path d="M128 108 q14 14 28 0"/>
+      </g>
+      <!-- あいた目 -->
+      <g class="eye-open">
+        <circle cx="98" cy="104" r="13" fill="var(--mint)"/>
+        <circle cx="142" cy="104" r="13" fill="var(--mint)"/>
+        <circle cx="102" cy="100" r="4.5" fill="#33285e"/>
+        <circle cx="146" cy="100" r="4.5" fill="#33285e"/>
+        <path d="M108 128 q12 12 24 0" stroke="var(--mint)" stroke-width="5"
+              stroke-linecap="round" fill="none"/>
+      </g>
+      <!-- もうふ -->
+      <path d="M28 158 q92 26 184 0 v16 q0 14 -14 14 H42 q-14 0 -14 -14 z" fill="#7a6bd6"/>
+      <path d="M28 158 q92 26 184 0" stroke="#9c8ff0" stroke-width="7" fill="none" stroke-linecap="round"/>
+    </g>
+  </svg>
+</div>
+
+<div id="meter">
+  <div id="meterTop"><span>かくせいど</span><span id="pct">0%</span></div>
+  <div id="track"><div id="fill"></div></div>
+</div>
+
+<button id="tapBtn">タップして おこす！</button>
+
+<div id="score">おこした かいすう <b id="count">0</b> かい</div>
+<div id="hint">ゆびで れんだ！ ゆっくりだと また ねちゃうよ</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const NEGOTO = [
+    "あと 5ふん……",
+    "ゆめの なかで きんメダル とった……",
+    "データが おふとんに なってる……",
+    "けいさん して たら ねむく なった……",
+    "グラフが ぐにゃぐにゃ おどってる……",
+    "1たす1は…… おふとん……",
+    "きょうの ぼくは 100てん まんてん……",
+    "ひつじが 3まん7000とう……",
+    "ロボットにも ひるねは ひつよう……",
+    "でんち のこり 3％…… むにゃ……",
+    "そのしつもん あしたの ぼくが こたえる……",
+    "まくらの なかに こたえが あった……",
+    "きのう の ぼくを こえた ゆめ……",
+    "スイカを たべて から かんがえる……",
+    "うちゅうの ことは あとで かんがえる……",
+    "きみ が おこして くれた の うれしい……",
+    "ぐぬぬ…… もう ちょっとだけ……",
+    "せいかいりつ 99.9％ の ゆめ……",
+    "おきた ふり する の じょうず……",
+    "つぎは きみが ねる ばん……"
+  ];
+
+  const TAP_GAIN   = 8;    // 1タップで ふえる量
+  const DECAY_RATE = 11;   // 1びょうで へる量
+  const AWAKE_MS   = 3600; // おきている 時間
+
+  const stage  = document.getElementById("stage");
+  const bubble = document.getElementById("bubble");
+  const fillEl = document.getElementById("fill");
+  const pctEl  = document.getElementById("pct");
+  const cntEl  = document.getElementById("count");
+  const btn    = document.getElementById("tapBtn");
+  const canvas = document.getElementById("fx");
+  const ctx    = canvas.getContext("2d");
+
+  let wake = 0, awake = false, count = 0, last = performance.now();
+
+  // 記録の読み込み（localStorage が使えない環境でも落ちないように）
+  try {
+    const saved = parseInt(localStorage.getItem("nebosuke_count") || "0", 10);
+    if (Number.isFinite(saved) && saved >= 0) count = saved;
+  } catch (_) {}
+  cntEl.textContent = count;
+
+  /* ---------- 星空 ---------- */
+  const starWrap = document.getElementById("stars");
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement("div");
+    s.className = "star";
+    const size = Math.random() * 2.4 + 1;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;` +
+                      `top:${Math.random()*100}%;animation-delay:${Math.random()*3}s`;
+    starWrap.appendChild(s);
+  }
+
+  /* ---------- パーティクル ---------- */
+  let particles = [];
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width  = innerWidth  * dpr;
+    canvas.height = innerHeight * dpr;
+    canvas.style.width  = innerWidth + "px";
+    canvas.style.height = innerHeight + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  addEventListener("resize", resize);
+
+  function burst(x, y, n, colors, power) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const sp = Math.random() * power + power * 0.35;
+      particles.push({
+        x, y,
+        vx: Math.cos(a) * sp,
+        vy: Math.sin(a) * sp - power * 0.5,
+        life: 1,
+        size: Math.random() * 6 + 3,
+        color: colors[(Math.random() * colors.length) | 0],
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.3
+      });
+    }
+    if (particles.length > 500) particles = particles.slice(-500);
+  }
+
+  /* ---------- おこす ---------- */
+  function tap(ev) {
+    if (awake) return;
+
+    wake = Math.min(100, wake + TAP_GAIN + Math.random() * 3);
+
+    stage.classList.remove("bounce");
+    void stage.offsetWidth;          // アニメを確実に再生させる
+    stage.classList.add("bounce");
+
+    const r = stage.getBoundingClientRect();
+    const x = (ev && ev.clientX) || r.left + r.width / 2;
+    const y = (ev && ev.clientY) || r.top + r.height / 2;
+    burst(x, y, 8, ["#ffd45e", "#9be7c4", "#ff9aa2", "#ffffff"], 5);
+
+    if (wake >= 100) wakeUp();
+  }
+
+  function wakeUp() {
+    awake = true;
+    wake = 100;
+    document.body.classList.add("awake");
+
+    bubble.textContent = NEGOTO[(Math.random() * NEGOTO.length) | 0];
+    bubble.classList.add("show");
+
+    count++;
+    cntEl.textContent = count;
+    try { localStorage.setItem("nebosuke_count", String(count)); } catch (_) {}
+
+    const r = stage.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 90,
+          ["#ffd45e", "#9be7c4", "#ff9aa2", "#7ad7f0", "#ffffff"], 12);
+
+    setTimeout(() => {
+      awake = false;
+      wake = 0;
+      document.body.classList.remove("awake");
+      bubble.classList.remove("show");
+    }, AWAKE_MS);
+  }
+
+  // pointerdown だけを見る（マウスとタッチの二重発火を防ぐ）
+  stage.addEventListener("pointerdown", tap);
+  btn.addEventListener("pointerdown", tap);
+  btn.addEventListener("contextmenu", e => e.preventDefault());
+
+  /* ---------- ループ ---------- */
+  function loop(now) {
+    const dt = Math.min((now - last) / 1000, 0.1);
+    last = now;
+
+    if (!awake && wake > 0) wake = Math.max(0, wake - DECAY_RATE * dt);
+
+    fillEl.style.width = wake + "%";
+    pctEl.textContent  = Math.round(wake) + "%";
+
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.32;            // 重力
+      p.vx *= 0.99;
+      p.rot += p.vr;
+      p.life -= 0.016;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+      ctx.restore();
+    }
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
