@@ -1,17 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="280" viewBox="0 0 760 280" role="img" aria-label="ねむっては起きる ねぼすけAI">
 <title>ねぼすけAI</title>
-<desc>黒いパーカーの男の子が、ねむって、ときどき起きて、寝言を言って、また寝ます。</desc>
+<desc>ねむって、ときどき起きて、寝言を言って、また寝ます。</desc>
 
 <style>
   /* 1サイクル 12秒 × 4本 = 48秒でループ。寝言が4種類めぐる。 */
-  .lbl { font-family:"Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif; }
+  .lbl   { font-family:"Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif; }
 
-  @keyframes breathe { 0%,100%{transform:scale(1,1)} 50%{transform:scale(1.015,.985)} }
-  @keyframes hop     { 0%,56%{transform:translateY(0)} 62%{transform:translateY(-13px)}
-                       68%{transform:translateY(0)} 74%{transform:translateY(-7px)}
+  @keyframes breathe { 0%,100%{transform:scale(1,1)} 50%{transform:scale(1.02,.98)} }
+  @keyframes hop     { 0%,56%{transform:translateY(0)} 62%{transform:translateY(-14px)}
+                       68%{transform:translateY(0)} 74%{transform:translateY(-8px)}
                        80%,100%{transform:translateY(0)} }
-  @keyframes nod     { 0%,56%{transform:rotate(6deg)} 60%,88%{transform:rotate(0deg)}
-                       92%,100%{transform:rotate(6deg)} }
   /* 起きている窓: 12秒中 7.0s〜10.5s */
   @keyframes awake   { 0%,56%{opacity:0} 60%{opacity:1} 86%{opacity:1} 90%,100%{opacity:0} }
   @keyframes asleep  { 0%,56%{opacity:1} 60%{opacity:0} 86%{opacity:0} 90%,100%{opacity:1} }
@@ -20,6 +18,7 @@
                        90%,100%{opacity:0;transform:scale(.7)} }
   @keyframes zfloat  { 0%{opacity:0;transform:translate(0,0) scale(.6)}
                        20%{opacity:.95} 100%{opacity:0;transform:translate(26px,-58px) scale(1.25)} }
+  @keyframes glow    { 0%,100%{opacity:.3} 50%{opacity:.85} }
   @keyframes twinkle { 0%,100%{opacity:.2} 50%{opacity:.95} }
 
   /* 寝言の出し分け（48秒周期の4つの窓） */
@@ -28,19 +27,19 @@
   @keyframes p3 { 0%,64.5%{opacity:0} 65.5%{opacity:1} 71.5%{opacity:1} 72.5%,100%{opacity:0} }
   @keyframes p4 { 0%,89.5%{opacity:0} 90.5%{opacity:1} 96.5%{opacity:1} 97.5%,100%{opacity:0} }
 
-  #rig   { animation:hop 12s ease-in-out infinite; }
-  #chest { animation:breathe 3.4s ease-in-out infinite; transform-box:fill-box; transform-origin:50% 95%; }
-  #head  { animation:nod 12s ease-in-out infinite; transform-box:fill-box; transform-origin:50% 100%; }
-  .eyeOpen, #blush, #mouthAwake { opacity:0; animation:awake 12s linear infinite; }
-  .eyeShut, #mouthSleep         { animation:asleep 12s linear infinite; }
-  #bubble { opacity:0; animation:pop 12s ease-out infinite; transform-box:fill-box; transform-origin:8% 90%; }
-  .zzz    { opacity:0; animation:zfloat 3s linear infinite, asleep 12s linear infinite; }
-  .say    { opacity:0; }
+  #rig    { animation:hop 12s ease-in-out infinite; }
+  #chest  { animation:breathe 3.4s ease-in-out infinite; transform-box:fill-box; transform-origin:50% 90%; }
+  .eyeOpen, #blush { opacity:0; animation:awake 12s linear infinite; }
+  .eyeShut         { animation:asleep 12s linear infinite; }
+  #bulb            { animation:glow 3.4s ease-in-out infinite; }
+  #bubble          { opacity:0; animation:pop 12s ease-out infinite; transform-box:fill-box; transform-origin:8% 90%; }
+  .zzz             { opacity:0; animation:zfloat 3s linear infinite, asleep 12s linear infinite; }
+  .say             { opacity:0; }
   #s1{animation:p1 48s linear infinite} #s2{animation:p2 48s linear infinite}
   #s3{animation:p3 48s linear infinite} #s4{animation:p4 48s linear infinite}
-  .star   { animation:twinkle 3s ease-in-out infinite; }
+  .star { animation:twinkle 3s ease-in-out infinite; }
 
-  @media (prefers-reduced-motion: reduce) { * { animation:none !important } .eyeShut,#mouthSleep{opacity:1} }
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important } .eyeShut{opacity:1} }
 </style>
 
 <defs>
@@ -64,7 +63,7 @@
     <circle class="star" cx="600" cy="60"  r="1.7" style="animation-delay:1.8s"/>
     <circle class="star" cx="705" cy="120" r="1.3" style="animation-delay:2.4s"/>
     <circle class="star" cx="40"  cy="150" r="1.4" style="animation-delay:1.5s"/>
-    <circle class="star" cx="250" cy="238" r="1.2" style="animation-delay:.9s"/>
+    <circle class="star" cx="250" cy="230" r="1.2" style="animation-delay:.9s"/>
     <circle class="star" cx="660" cy="215" r="1.5" style="animation-delay:2.1s"/>
   </g>
 
@@ -72,82 +71,44 @@
   <circle cx="694" cy="52" r="22" fill="#ffd45e" opacity=".92"/>
   <circle cx="684" cy="46" r="19" fill="#241a48" opacity=".95"/>
 
-  <!-- ねぼすけAI -->
-  <g id="rig" transform="translate(58,26) scale(0.96)">
+  <!-- キャラクター -->
+  <g id="rig" transform="translate(58,42) scale(0.86)">
     <g id="chest">
+      <line x1="120" y1="30" x2="120" y2="52" stroke="#8f7fd8" stroke-width="6" stroke-linecap="round"/>
+      <circle id="bulb" cx="120" cy="24" r="11" fill="#ffd45e"/>
 
-      <!-- からだ（黒パーカー） -->
-      <rect x="105" y="128" width="30" height="26" fill="#f0c6b1"/>
-      <path d="M54 216 C54 170 82 150 120 150 C158 150 186 170 186 216 Z" fill="#26262f"/>
-      <path d="M72 152 Q120 180 168 152 Q162 130 120 130 Q78 130 72 152 Z" fill="#33333f"/>
-      <g stroke="#e8e8ee" stroke-width="4" stroke-linecap="round">
-        <path d="M105 164 v22"/><path d="M135 164 v20"/>
-      </g>
-      <circle cx="105" cy="188" r="3.6" fill="#e8e8ee"/>
-      <circle cx="135" cy="186" r="3.6" fill="#e8e8ee"/>
+      <rect x="34" y="48" width="172" height="132" rx="42" fill="#fff6e5"/>
 
-      <g id="head">
-        <!-- 髪（後ろ） -->
-        <ellipse cx="120" cy="86" rx="64" ry="62" fill="#1c1c28"/>
-        <path d="M58 92 C53 122 57 144 66 152 C61 130 61 108 63 94 Z" fill="#1c1c28"/>
-        <path d="M182 92 C187 122 183 144 174 152 C179 130 179 108 177 94 Z" fill="#1c1c28"/>
-
-        <!-- かお -->
-        <ellipse cx="120" cy="94" rx="53" ry="51" fill="#ffe0cf"/>
-
-        <!-- 前髪（とがった癖っ毛） -->
-        <path d="M66 98 L75 62 L87 90 L97 55 L108 86 L120 51 L132 86 L143 55 L154 90 L166 62 L174 98
-                 Q179 46 120 41 Q61 46 66 98 Z" fill="#1c1c28"/>
-        <path d="M92 57 Q116 47 140 54" stroke="#3a3a52" stroke-width="3.5" fill="none"
-              stroke-linecap="round" opacity=".5"/>
-
-        <!-- ほっぺ -->
-        <g id="blush">
-          <ellipse cx="86"  cy="114" rx="10" ry="6" fill="#ff9aa2" opacity=".6"/>
-          <ellipse cx="154" cy="114" rx="10" ry="6" fill="#ff9aa2" opacity=".6"/>
-        </g>
-
-        <!-- とじた目 -->
-        <g class="eyeShut" stroke="#1c1c28" stroke-width="4.5" stroke-linecap="round" fill="none">
-          <path d="M88 100 Q100 111 112 100"/>
-          <path d="M128 100 Q140 111 152 100"/>
-        </g>
-
-        <!-- あいた目 -->
-        <g class="eyeOpen">
-          <ellipse cx="100" cy="101" rx="10" ry="12.5" fill="#4fd3dd"/>
-          <ellipse cx="140" cy="101" rx="10" ry="12.5" fill="#4fd3dd"/>
-          <ellipse cx="100" cy="102" rx="5"  ry="7.5"  fill="#123039"/>
-          <ellipse cx="140" cy="102" rx="5"  ry="7.5"  fill="#123039"/>
-          <circle cx="96"  cy="96"  r="3.4" fill="#fff"/>
-          <circle cx="136" cy="96"  r="3.4" fill="#fff"/>
-          <circle cx="103" cy="107" r="1.9" fill="#fff" opacity=".75"/>
-          <circle cx="143" cy="107" r="1.9" fill="#fff" opacity=".75"/>
-          <g stroke="#1c1c28" stroke-width="5" stroke-linecap="round" fill="none">
-            <path d="M87 91 Q100 83 113 91"/>
-            <path d="M127 91 Q140 83 153 91"/>
-          </g>
-        </g>
-
-        <!-- くち -->
-        <ellipse id="mouthSleep" cx="120" cy="124" rx="4.5" ry="5.5" fill="#c9707b" opacity=".85"/>
-        <path id="mouthAwake" d="M111 121 Q120 130 129 121" stroke="#b5606a" stroke-width="3.5"
-              stroke-linecap="round" fill="none"/>
+      <g id="blush">
+        <ellipse cx="63"  cy="128" rx="15" ry="10" fill="#ff9aa2" opacity=".75"/>
+        <ellipse cx="177" cy="128" rx="15" ry="10" fill="#ff9aa2" opacity=".75"/>
       </g>
 
-      <!-- もうふ -->
-      <path d="M42 190 q78 28 156 0 v22 q0 14 -14 14 H56 q-14 0 -14 -14 z" fill="#7a6bd6"/>
-      <path d="M42 190 q78 28 156 0" stroke="#9c8ff0" stroke-width="5" fill="none" stroke-linecap="round"/>
-      <path d="M62 210 q58 16 116 0" stroke="#6a5bc4" stroke-width="3" fill="none"
-            stroke-linecap="round" opacity=".8"/>
+      <rect x="60" y="70" width="120" height="76" rx="26" fill="#33285e"/>
+
+      <g class="eyeShut" stroke="#9be7c4" stroke-width="7" stroke-linecap="round" fill="none">
+        <path d="M84 108 q14 14 28 0"/>
+        <path d="M128 108 q14 14 28 0"/>
+      </g>
+
+      <g class="eyeOpen">
+        <circle cx="98"  cy="104" r="13" fill="#9be7c4"/>
+        <circle cx="142" cy="104" r="13" fill="#9be7c4"/>
+        <circle cx="102" cy="100" r="4.5" fill="#33285e"/>
+        <circle cx="146" cy="100" r="4.5" fill="#33285e"/>
+        <path d="M108 128 q12 12 24 0" stroke="#9be7c4" stroke-width="5" stroke-linecap="round" fill="none"/>
+      </g>
+
+      <path d="M28 158 q92 26 184 0 v16 q0 14 -14 14 H42 q-14 0 -14 -14 z" fill="#7a6bd6"/>
+      <path d="M28 158 q92 26 184 0" stroke="#9c8ff0" stroke-width="7" fill="none" stroke-linecap="round"/>
     </g>
   </g>
 
   <!-- zzz -->
   <g class="lbl" fill="#cbbdf5" font-weight="700">
-    <text class="zzz" x="236" y="80"  font-size="26" style="animation-delay:0s,0s">z</text>
-    <text class="zzz" x="258" y="60"  font-size="21" style="animation-delay:1s,0s">z</text>
-    <text class="zzz" x="220" y="98"  font-size="17" style="animation-delay:2s,0s">z</text>
+    <text class="zzz" x="228" y="86" font-size="26" style="animation-delay:0s,0s">z</text>
+    <text class="zzz" x="250" y="66" font-size="21" style="animation-delay:1s,0s">z</text>
+    <text class="zzz" x="212" y="104" font-size="17" style="animation-delay:2s,0s">z</text>
   </g>
 
   <!-- ふきだし -->
