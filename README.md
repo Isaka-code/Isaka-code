@@ -1,3 +1,16 @@
+# :sleeping: ねぼすけAIを おこそう！
+
+<p align="center">
+  <a href="https://isaka-code.github.io/Isaka-code/"><img alt="あそぶ" src="https://img.shields.io/badge/%E2%96%B6%EF%B8%8E%20%E3%81%82%E3%81%9D%E3%81%B6-ffd45e?style=for-the-badge&labelColor=2b2450&color=ffd45e"></a>
+</p>
+
+<p align="center">
+  タップして ねぼすけAI を起こすゲームです。<br>
+  静的HTML 1枚・外部依存ゼロ。小学生でも説明なしで遊べます。
+</p>
+
+---
+
 # :chart_with_upwards_trend: GitHub Stats
 
 <p align="center">
