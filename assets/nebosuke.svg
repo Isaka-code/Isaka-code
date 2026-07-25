@@ -77,7 +77,7 @@
   <!-- キャラクター＋zzz。
        位置決めはこの外側の g で行う。#rig に transform 属性を書くと
        hop アニメの CSS transform に上書きされて効かないため。 -->
-  <g id="scene" transform="translate(0,40)">
+  <g id="scene" transform="translate(0,72)">
 
   <g id="rig">
     <g id="chest">
