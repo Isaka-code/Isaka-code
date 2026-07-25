@@ -3,40 +3,40 @@
 <desc>ねむって、ときどき起きて、寝言を言って、また寝ます。</desc>
 
 <style>
-  /* 1サイクル 12秒 × 4本 = 48秒でループ。寝言が4種類めぐる。 */
+  /* 1サイクル 7秒（眠り3秒 + 起床約4秒）× 4本 = 28秒でループ。寝言が4種類めぐる。 */
   .lbl   { font-family:"Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif; }
 
   @keyframes breathe { 0%,100%{transform:scale(1,1)} 50%{transform:scale(1.02,.98)} }
-  @keyframes hop     { 0%,56%{transform:translateY(0)} 62%{transform:translateY(-14px)}
-                       68%{transform:translateY(0)} 74%{transform:translateY(-8px)}
-                       80%,100%{transform:translateY(0)} }
-  /* 起きている窓: 12秒中 7.0s〜10.5s */
-  @keyframes awake   { 0%,56%{opacity:0} 60%{opacity:1} 86%{opacity:1} 90%,100%{opacity:0} }
-  @keyframes asleep  { 0%,56%{opacity:1} 60%{opacity:0} 86%{opacity:0} 90%,100%{opacity:1} }
-  @keyframes pop     { 0%,56%{opacity:0;transform:scale(.6)} 61%{opacity:1;transform:scale(1.06)}
-                       65%{transform:scale(1)} 86%{opacity:1;transform:scale(1)}
-                       90%,100%{opacity:0;transform:scale(.7)} }
+  @keyframes hop     { 0%,42.8%{transform:translateY(0)} 48%{transform:translateY(-14px)}
+                       53%{transform:translateY(0)} 58%{transform:translateY(-8px)}
+                       64%,100%{transform:translateY(0)} }
+  /* 眠り: 0〜3.0s / 起きている窓: 7秒中 3.0s〜6.9s */
+  @keyframes awake   { 0%,42.8%{opacity:0} 47%{opacity:1} 92.8%{opacity:1} 98.5%,100%{opacity:0} }
+  @keyframes asleep  { 0%,42.8%{opacity:1} 47%{opacity:0} 92.8%{opacity:0} 98.5%,100%{opacity:1} }
+  @keyframes pop     { 0%,42.8%{opacity:0;transform:scale(.6)} 51%{opacity:1;transform:scale(1.06)}
+                       55%{transform:scale(1)} 92.8%{opacity:1;transform:scale(1)}
+                       98.5%,100%{opacity:0;transform:scale(.7)} }
   @keyframes zfloat  { 0%{opacity:0;transform:translate(0,0) scale(.6)}
                        20%{opacity:.95} 100%{opacity:0;transform:translate(26px,-58px) scale(1.25)} }
   @keyframes glow    { 0%,100%{opacity:.3} 50%{opacity:.85} }
   @keyframes twinkle { 0%,100%{opacity:.2} 50%{opacity:.95} }
 
-  /* 寝言の出し分け（48秒周期の4つの窓） */
-  @keyframes p1 { 0%,14.5%{opacity:0} 15.5%{opacity:1} 21.5%{opacity:1} 22.5%,100%{opacity:0} }
-  @keyframes p2 { 0%,39.5%{opacity:0} 40.5%{opacity:1} 46.5%{opacity:1} 47.5%,100%{opacity:0} }
-  @keyframes p3 { 0%,64.5%{opacity:0} 65.5%{opacity:1} 71.5%{opacity:1} 72.5%,100%{opacity:0} }
-  @keyframes p4 { 0%,89.5%{opacity:0} 90.5%{opacity:1} 96.5%{opacity:1} 97.5%,100%{opacity:0} }
+  /* 寝言の出し分け（28秒周期の4つの窓） */
+  @keyframes p1 { 0%,11.4%{opacity:0} 12.1%{opacity:1} 23.2%{opacity:1} 24.6%,100%{opacity:0} }
+  @keyframes p2 { 0%,36.4%{opacity:0} 37.1%{opacity:1} 48.2%{opacity:1} 49.6%,100%{opacity:0} }
+  @keyframes p3 { 0%,61.4%{opacity:0} 62.1%{opacity:1} 73.2%{opacity:1} 74.6%,100%{opacity:0} }
+  @keyframes p4 { 0%,86.4%{opacity:0} 87.1%{opacity:1} 98.2%{opacity:1} 99.6%,100%{opacity:0} }
 
-  #rig    { animation:hop 12s ease-in-out infinite; }
+  #rig    { animation:hop 7s ease-in-out infinite; }
   #chest  { animation:breathe 3.4s ease-in-out infinite; transform-box:fill-box; transform-origin:50% 90%; }
-  .eyeOpen, #blush { opacity:0; animation:awake 12s linear infinite; }
-  .eyeShut         { animation:asleep 12s linear infinite; }
+  .eyeOpen, #blush { opacity:0; animation:awake 7s linear infinite; }
+  .eyeShut         { animation:asleep 7s linear infinite; }
   #bulb            { animation:glow 3.4s ease-in-out infinite; }
-  #bubble          { opacity:0; animation:pop 12s ease-out infinite; transform-box:fill-box; transform-origin:8% 90%; }
-  .zzz             { opacity:0; animation:zfloat 3s linear infinite, asleep 12s linear infinite; }
+  #bubble          { opacity:0; animation:pop 7s ease-out infinite; transform-box:fill-box; transform-origin:8% 90%; }
+  .zzz             { opacity:0; animation:zfloat 3s linear infinite, asleep 7s linear infinite; }
   .say             { opacity:0; }
-  #s1{animation:p1 48s linear infinite} #s2{animation:p2 48s linear infinite}
-  #s3{animation:p3 48s linear infinite} #s4{animation:p4 48s linear infinite}
+  #s1{animation:p1 28s linear infinite} #s2{animation:p2 28s linear infinite}
+  #s3{animation:p3 28s linear infinite} #s4{animation:p4 28s linear infinite}
   .star { animation:twinkle 3s ease-in-out infinite; }
 
   @media (prefers-reduced-motion: reduce) { * { animation:none !important } .eyeShut{opacity:1} }
