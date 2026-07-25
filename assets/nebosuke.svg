@@ -35,8 +35,9 @@
   #bubble          { opacity:0; animation:pop 5.7s ease-out infinite; transform-box:fill-box; transform-origin:8% 90%; }
   .zzz             { opacity:0; animation:zfloat 3s linear infinite, asleep 5.7s linear infinite; }
   .say             { opacity:0; }
-  #s1{animation:p1 22.8s linear infinite} #s2{animation:p2 22.8s linear infinite}
-  #s3{animation:p3 22.8s linear infinite} #s4{animation:p4 22.8s linear infinite}
+  /* 表示順は s2 → s3 → s4 → s1（p1 が最初の窓） */
+  #s2{animation:p1 22.8s linear infinite} #s3{animation:p2 22.8s linear infinite}
+  #s4{animation:p3 22.8s linear infinite} #s1{animation:p4 22.8s linear infinite}
   .star { animation:twinkle 3s ease-in-out infinite; }
 
   @media (prefers-reduced-motion: reduce) { * { animation:none !important } .eyeShut{opacity:1} }
