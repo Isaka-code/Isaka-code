@@ -33,7 +33,9 @@
   .eyeShut         { animation:asleep 5.7s linear infinite; }
   #bulb            { animation:glow 3.4s ease-in-out infinite; }
   #bubble          { opacity:0; animation:pop 5.7s ease-out infinite; transform-box:fill-box; transform-origin:8% 90%; }
-  .zzz             { opacity:0; animation:zfloat 3s linear infinite, asleep 5.7s linear infinite; }
+  /* transform-box を指定しないと scale が原点(0,0)基準になり、z が横滑りする */
+  .zzz             { opacity:0; transform-box:fill-box; transform-origin:50% 50%;
+                     animation:zfloat 3s linear infinite, asleep 5.7s linear infinite; }
   .say             { opacity:0; }
   /* 表示順は s2 → s3 → s4 → s1（p1 が最初の窓） */
   #s2{animation:p1 22.8s linear infinite} #s3{animation:p2 22.8s linear infinite}
@@ -72,8 +74,12 @@
   <circle cx="694" cy="52" r="22" fill="#ffd45e" opacity=".92"/>
   <circle cx="684" cy="46" r="19" fill="#241a48" opacity=".95"/>
 
-  <!-- キャラクター -->
-  <g id="rig" transform="translate(58,42) scale(0.86)">
+  <!-- キャラクター＋zzz。
+       位置決めはこの外側の g で行う。#rig に transform 属性を書くと
+       hop アニメの CSS transform に上書きされて効かないため。 -->
+  <g id="scene" transform="translate(0,40)">
+
+  <g id="rig">
     <g id="chest">
       <line x1="120" y1="30" x2="120" y2="52" stroke="#8f7fd8" stroke-width="6" stroke-linecap="round"/>
       <circle id="bulb" cx="120" cy="24" r="11" fill="#ffd45e"/>
@@ -107,10 +113,12 @@
 
   <!-- zzz -->
   <g class="lbl" fill="#cbbdf5" font-weight="700">
-    <text class="zzz" x="228" y="86" font-size="26" style="animation-delay:0s,0s">z</text>
-    <text class="zzz" x="250" y="66" font-size="21" style="animation-delay:1s,0s">z</text>
-    <text class="zzz" x="212" y="104" font-size="17" style="animation-delay:2s,0s">z</text>
+    <text class="zzz" x="226" y="62" font-size="26" style="animation-delay:0s,0s">z</text>
+    <text class="zzz" x="248" y="42" font-size="21" style="animation-delay:1s,0s">z</text>
+    <text class="zzz" x="220" y="80" font-size="17" style="animation-delay:2s,0s">z</text>
   </g>
+
+  </g><!-- /#scene -->
 
   <!-- ふきだし -->
   <g id="bubble">
